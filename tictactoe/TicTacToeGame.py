@@ -2,7 +2,7 @@ from __future__ import print_function
 import sys
 sys.path.append('..')
 from Game import Game
-from .TicTacToeLogic import Board
+from TicTacToeLogic import Board
 import numpy as np
 
 """
@@ -14,13 +14,21 @@ Date: Jan 5, 2018.
 
 Based on the OthelloGame by Surag Nair.
 """
+
+
+
 class TicTacToeGame(Game):
+
+
+    INT2STR_MAP = {0: ' ', 1: 'x', -1: 'o'}
+
     def __init__(self, n=3):
         self.n = n
 
     def getInitBoard(self):
         # return initial board (numpy board)
         b = Board(self.n)
+        print('initial:',np.array(b.pieces))
         return np.array(b.pieces)
 
     def getBoardSize(self):
@@ -39,7 +47,7 @@ class TicTacToeGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
-        b.execute_move(move, player)
+        b.execute_move(move, 1)
         return (b.pieces, -player)
 
     def getValidMoves(self, board, player):
@@ -72,7 +80,7 @@ class TicTacToeGame(Game):
 
     def getCanonicalForm(self, board, player):
         # return state if player==1, else return -state if player==-1
-        return player*board
+        return 1*board
 
     def getSymmetries(self, board, pi):
         # mirror, rotational
@@ -95,30 +103,54 @@ class TicTacToeGame(Game):
         return board.tostring()
 
 def display(board):
+    #print('this is board', board)
+    #print(type(board))
+    # print(
+    #     '\n'
+    #     '\t    0   1   2\n'
+    #     '\t 0  {0} | {1} | {2}\n'
+    #     '\t   ---+---+---\n'
+    #     '\t 1  {3} | {4} | {5}\n'
+    #     '\t   ---+---+---\n'
+    #     '\t 2  {6} | {7} | {8}\n\n'.format(
+    #         *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
+
+    print(
+        '\n'
+        '\t    0   1   2   3\n'
+        '\t 0  {0} | {1} | {2} | {3}\n'
+        '\t   ---+---+---+---\n'
+        '\t 1  {4} | {5} | {6} | {7}\n'
+        '\t   ---+---+---+---\n'
+        '\t 2  {8} | {9} | {10} | {11}\n'
+        '\t   ---+---+---+---\n'
+        '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
+            *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
+
     n = board.shape[0]
 
-    print("   ", end="")
-    for y in range(n):
-        print (y,"", end="")
-    print("")
-    print("  ", end="")
-    for _ in range(n):
-        print ("-", end="-")
-    print("--")
-    for y in range(n):
-        print(y, "|",end="")    # print the row #
-        for x in range(n):
-            piece = board[y][x]    # get the piece to print
-            if piece == -1: print("X ",end="")
-            elif piece == 1: print("O ",end="")
-            else:
-                if x==n:
-                    print("-",end="")
-                else:
-                    print("- ",end="")
-        print("|")
+    # print("   ", end="")
+    # for y in range(n):
+    #     print (y,"", end="")
+    # print("")
+    # print("  ", end="")
+    # for _ in range(n):
+    #     print ("-", end="-")
+    # print("--")
+    # for y in range(n):
+    #     print(y, "|",end="")    # print the row #
+    #     for x in range(n):
+    #         piece = board[y][x]    # get the piece to print
+    #         if piece == -1: print("X ",end="")
+    #         elif piece == 1: print("O ",end="")
+    #         else:
+    #             if x==n:
+    #                 print("-",end="")
+    #             else:
+    #                 print("- ",end="")
+    #     print("|")
 
-    print("  ", end="")
-    for _ in range(n):
-        print ("-", end="-")
-    print("--")
+    # print("  ", end="")
+    # for _ in range(n):
+    #     print ("-", end="-")
+    # print("--")

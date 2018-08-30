@@ -44,6 +44,11 @@ class Arena():
                 print("Turn ", str(it), "Player ", str(curPlayer))
                 self.display(board)
             action = players[curPlayer+1](self.game.getCanonicalForm(board, curPlayer))
+            print('curPlayer:',curPlayer)
+            # print('players,',players)
+            # print('players[]',players[curPlayer+1])
+            # print('canonical,',self.game.getCanonicalForm(board, curPlayer))
+            # print('action,',action)
 
             valids = self.game.getValidMoves(self.game.getCanonicalForm(board, curPlayer),1)
 
@@ -53,9 +58,11 @@ class Arena():
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
         if verbose:
             assert(self.display)
-            print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
+            #print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, curPlayer)))
+            print("Game over: Turn ", str(it), "Result ", str(curPlayer))
             self.display(board)
-        return self.game.getGameEnded(board, 1)
+        #return self.game.getGameEnded(board, curPlayer)
+        return curPlayer
 
     def playGames(self, num, verbose=False):
         """
@@ -85,6 +92,7 @@ class Arena():
                 twoWon+=1
             else:
                 draws+=1
+            print('one,',oneWon,'two',twoWon) 
             # bookkeeping + plot progress
             eps += 1
             eps_time.update(time.time() - end)
@@ -103,6 +111,7 @@ class Arena():
                 twoWon+=1
             else:
                 draws+=1
+            print('one,',oneWon,'two',twoWon) 
             # bookkeeping + plot progress
             eps += 1
             eps_time.update(time.time() - end)

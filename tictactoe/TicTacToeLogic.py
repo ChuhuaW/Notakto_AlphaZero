@@ -1,3 +1,4 @@
+from copy import deepcopy
 '''
 Board class for the game of TicTacToe.
 Default board size is 3x3.
@@ -19,8 +20,8 @@ class Board():
 
     # list of all 8 directions on the board, as (x,y) offsets
     __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
-
-    def __init__(self, n=3):
+    SIZE=4
+    def __init__(self, n=SIZE):
         "Set up initial board configuration."
 
         self.n = n
@@ -39,6 +40,7 @@ class Board():
         @param color not used and came from previous version.        
         """
         moves = set()  # stores the legal moves.
+        states_to_moves = {}
 
         # Get all the empty squares (color==0)
         for y in range(self.n):
@@ -46,7 +48,36 @@ class Board():
                 if self[x][y]==0:
                     newmove = (x,y)
                     moves.add(newmove)
-        return list(moves)
+        # following codes is to ignore suicide moves
+        moves = list(moves)
+        #print self.pieces
+        copy = deepcopy(self)
+        all_possible_states = []
+        for m in moves:
+            self = deepcopy(copy)
+            self.execute_move(m,1)
+            states_to_moves[str(self)]=m
+        #print('self.pieces',self.pieces)
+            all_possible_states.append(self)
+        #print('all_possible_states,',[all_possible_states[s].pieces for s in range(len(all_possible_states))])
+        #print(len(all_possible_states))
+        all_possible_states = self.validatePossibleMoves(all_possible_states)
+        #print('all,',[all_possible_states[s].pieces for s in range(len(all_possible_states))])
+        #print(len(all_possible_states))
+
+        self = deepcopy(copy)
+        #print('newmove:',[states_to_moves[str(s)] for s in all_possible_states])
+        #print('self',self.pieces)
+        return [states_to_moves[str(s)] for s in all_possible_states]
+
+    def validatePossibleMoves(self,all_possible_states):
+        winners = []
+        for state in all_possible_states:
+            winners.append(state.is_win(1))
+        if all(win == True for win in winners):
+            return all_possible_states
+        else:
+            return [all_possible_states[w] for w in range(len(winners)) if winners[w] == 0]
 
     def has_legal_moves(self):
         for y in range(self.n):
@@ -101,5 +132,12 @@ class Board():
 
         # Add the piece to the empty square.
         assert self[x][y] == 0
-        self[x][y] = color
+        self[x][y] = 1
 
+# b = Board(3)
+# b.pieces[1][1]=1
+# #b.pieces[0][0]=1
+# b.pieces[0][1]=1
+# b.pieces[1][0]=1
+# print('b.pieces',b.pieces)
+#print(b.get_legal_moves(1))

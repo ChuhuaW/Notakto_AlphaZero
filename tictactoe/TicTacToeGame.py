@@ -21,15 +21,15 @@ class TicTacToeGame(Game):
 
 
     INT2STR_MAP = {0: ' ', 1: 'x', -1: 'o'}
-
-    def __init__(self, n=3):
+    
+    def __init__(self, n=Board.SIZE):
         self.n = n
 
     def getInitBoard(self):
         # return initial board (numpy board)
         b = Board(self.n)
-        print('initial:',np.array(b.pieces))
-        return np.array(b.pieces)
+        # print('initial:',np.array(b.pieces))
+        return b
 
     def getBoardSize(self):
         # (a,b) tuple
@@ -45,19 +45,24 @@ class TicTacToeGame(Game):
         if action == self.n*self.n:
             return (board, -player)
         b = Board(self.n)
-        b.pieces = np.copy(board)
+        b.pieces = np.copy(board.pieces)
+        b.mask_pieces = board.mask_pieces
         move = (int(action/self.n), action%self.n)
         b.execute_move(move, 1)
-        return (b.pieces, -player)
+        return (b, -player)
 
     def getValidMoves(self, board, player):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
         b = Board(self.n)
-        b.pieces = np.copy(board)
-        legalMoves =  b.get_legal_moves(player)
+        b.pieces = np.copy(board.pieces)
+        b.mask_pieces = board.mask_pieces
+        legalMoves =  b.get_legal_moves()
+        #print ('legal moves',legalMoves)
         if len(legalMoves)==0:
+            print ('non - legal moves',legalMoves)
             valids[-1]=1
+            #print(valids[-1])
             return np.array(valids)
         for x, y in legalMoves:
             valids[self.n*x+y]=1
@@ -67,12 +72,13 @@ class TicTacToeGame(Game):
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
         b = Board(self.n)
-        b.pieces = np.copy(board)
-
+        b.pieces = np.copy(board.pieces)
+        b.mask_pieces = board.mask_pieces
         if b.is_win(player):
+            #print('fdasfad')
             return 1
-        if b.is_win(-player):
-            return -1
+        # if b.is_win(-player):
+        #     return -1
         if b.has_legal_moves():
             return 0
         # draw has a very little value 
@@ -80,7 +86,8 @@ class TicTacToeGame(Game):
 
     def getCanonicalForm(self, board, player):
         # return state if player==1, else return -state if player==-1
-        return 1*board
+        #print(type(board))     
+        return board
 
     def getSymmetries(self, board, pi):
         # mirror, rotational
@@ -100,32 +107,32 @@ class TicTacToeGame(Game):
 
     def stringRepresentation(self, board):
         # 8x8 numpy array (canonical board)
-        return board.tostring()
+        return board.pieces.tostring()
 
 def display(board):
     #print('this is board', board)
     #print(type(board))
-    # print(
-    #     '\n'
-    #     '\t    0   1   2\n'
-    #     '\t 0  {0} | {1} | {2}\n'
-    #     '\t   ---+---+---\n'
-    #     '\t 1  {3} | {4} | {5}\n'
-    #     '\t   ---+---+---\n'
-    #     '\t 2  {6} | {7} | {8}\n\n'.format(
-    #         *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
-
     print(
         '\n'
-        '\t    0   1   2   3\n'
-        '\t 0  {0} | {1} | {2} | {3}\n'
-        '\t   ---+---+---+---\n'
-        '\t 1  {4} | {5} | {6} | {7}\n'
-        '\t   ---+---+---+---\n'
-        '\t 2  {8} | {9} | {10} | {11}\n'
-        '\t   ---+---+---+---\n'
-        '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
+        '\t    0   1   2\n'
+        '\t 0  {0} | {1} | {2}\n'
+        '\t   ---+---+---\n'
+        '\t 1  {3} | {4} | {5}\n'
+        '\t   ---+---+---\n'
+        '\t 2  {6} | {7} | {8}\n\n'.format(
             *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
+
+    # print(
+    #     '\n'
+    #     '\t    0   1   2   3\n'
+    #     '\t 0  {0} | {1} | {2} | {3}\n'
+    #     '\t   ---+---+---+---\n'
+    #     '\t 1  {4} | {5} | {6} | {7}\n'
+    #     '\t   ---+---+---+---\n'
+    #     '\t 2  {8} | {9} | {10} | {11}\n'
+    #     '\t   ---+---+---+---\n'
+    #     '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
+    #         *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
 
     n = board.shape[0]
 

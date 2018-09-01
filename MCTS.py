@@ -30,7 +30,6 @@ class MCTS():
         """
         for i in range(self.args.numMCTSSims):
             self.search(canonicalBoard)
-
         s = self.game.stringRepresentation(canonicalBoard)
         counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
 
@@ -75,8 +74,9 @@ class MCTS():
 
         if s not in self.Ps:
             # leaf node
-            self.Ps[s], v = self.nnet.predict(canonicalBoard)
+            self.Ps[s], v = self.nnet.predict(canonicalBoard.pieces)
             valids = self.game.getValidMoves(canonicalBoard, 1)
+            #print valids
             self.Ps[s] = self.Ps[s]*valids      # masking invalid moves
             sum_Ps_s = np.sum(self.Ps[s])
             if sum_Ps_s > 0:
@@ -100,6 +100,7 @@ class MCTS():
 
         # pick the action with the highest upper confidence bound
         for a in range(self.game.getActionSize()):
+            #print('valids[a]',valids)
             if valids[a]:
                 if (s,a) in self.Qsa:
                     u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[s][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
@@ -113,7 +114,7 @@ class MCTS():
         a = best_act
         next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
         next_s = self.game.getCanonicalForm(next_s, next_player)
-
+        #print('next_s',type(next_s))
         v = self.search(next_s)
 
         if (s,a) in self.Qsa:

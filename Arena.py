@@ -44,7 +44,7 @@ class Arena():
                 print("Turn ", str(it), "Player ", str(curPlayer))
                 self.display(board)
             action = players[curPlayer+1](self.game.getCanonicalForm(board, curPlayer))
-            print('curPlayer:',curPlayer)
+            #print('curPlayer:',curPlayer)
             # print('players,',players)
             # print('players[]',players[curPlayer+1])
             # print('canonical,',self.game.getCanonicalForm(board, curPlayer))

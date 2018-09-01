@@ -5,11 +5,14 @@
 
 from Coach import Coach
 from tictactoe.TicTacToeGame import TicTacToeGame
+from tictactoe.TicTacToeLogic import Board
 from tictactoe.keras.NNet import NNetWrapper as nn
 from utils import *
 
+
+
 args = dotdict({
-    'numIters': 15,
+    'numIters': 1,
     'numEps': 100,
     'tempThreshold': 15,
     'updateThreshold': 0.6,
@@ -17,6 +20,11 @@ args = dotdict({
     'numMCTSSims': 25,
     'arenaCompare': 40,
     'cpuct': 1,
+
+    'leaf_based_sampling': True,
+    'random_iterations': 1,
+    'states_file': './tictactoe/states.txt',
+    'numItersForLeafNodeSearch': 10,
 
     'checkpoint': './temp/',
     'load_model': False,
@@ -27,7 +35,7 @@ args = dotdict({
 
 if __name__=="__main__":
     #g = Game(6)
-    g = TicTacToeGame(4)
+    g = TicTacToeGame(Board.SIZE)
     nnet = nn(g)
 
     if args.load_model:

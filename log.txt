@@ -1,0 +1,108 @@
+
+	    0   1   2
+	 0    |   |  
+	   ---+---+---
+	 1    | x | x
+	   ---+---+---
+	 2    | x | x
+
+
+------ITER FOR LEAF SAMPLING1------
+------ITER 1------
+<type 'instance'>
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f0fcea6bf38>, <tictactoe.TicTacToeLogic.Board instance at 0x7f0fd8a671b8>])
+('length of states', 2)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f0fceb1fb90>])
+('length of states', 1)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f0fceb1f5f0>])
+('length of states', 1)
+('all_possible_states', [])
+('length of states', 0)
+non - legal moves []
+
+	    0   1   2
+	 0    |   |  
+	   ---+---+---
+	 1    | x | x
+	   ---+---+---
+	 2    | x | x
+
+
+------ITER FOR LEAF SAMPLING1------
+------ITER 1------
+<type 'instance'>
+('all_possible_states', [(1, 1), (2, 2)])
+('length of states', 2)
+('all_possible_states', [(1, 1)])
+('length of states', 1)
+('all_possible_states', [(2, 2)])
+('length of states', 1)
+('all_possible_states', [])
+('length of states', 0)
+non - legal moves []
+
+	    0   1   2
+	 0    |   |  
+	   ---+---+---
+	 1    | x | x
+	   ---+---+---
+	 2    | x | x
+
+
+------ITER FOR LEAF SAMPLING1------
+------ITER 1------
+<type 'instance'>
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f7b99b6bf38>, <tictactoe.TicTacToeLogic.Board instance at 0x7f7ba8ae81b8>])
+<tictactoe.TicTacToeLogic.Board instance at 0x7f7b99b6bf38>
+('length of states', 2)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f7b99c1eb90>])
+<tictactoe.TicTacToeLogic.Board instance at 0x7f7b99c1eb90>
+('length of states', 1)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f7b99c1e5f0>])
+<tictactoe.TicTacToeLogic.Board instance at 0x7f7b99c1e5f0>
+('length of states', 1)
+('all_possible_states', [])
+
+	    0   1   2
+	 0    |   |  
+	   ---+---+---
+	 1    | x | x
+	   ---+---+---
+	 2    | x | x
+
+
+------ITER FOR LEAF SAMPLING1------
+------ITER 1------
+<type 'instance'>
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f7b2cfccf38>, <tictactoe.TicTacToeLogic.Board instance at 0x7f7b2f8841b8>])
+(1, 2)
+('length of states', 2)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f7b2d080b90>])
+(1, 2)
+('length of states', 1)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f7b2d0805f0>])
+(1, 1)
+('length of states', 1)
+('all_possible_states', [])
+
+	    0   1   2
+	 0    |   |  
+	   ---+---+---
+	 1    | x | x
+	   ---+---+---
+	 2    | x | x
+
+
+------ITER FOR LEAF SAMPLING1------
+------ITER 1------
+<type 'instance'>
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f534c19ef38>, <tictactoe.TicTacToeLogic.Board instance at 0x7f539e4321b8>])
+(1, 2)
+('length of states', 2)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f534c251b90>])
+(1, 2)
+('length of states', 1)
+('all_possible_states', [<tictactoe.TicTacToeLogic.Board instance at 0x7f534c2515f0>])
+(2, 1)
+('length of states', 1)
+('all_possible_states', [])

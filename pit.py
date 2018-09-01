@@ -16,7 +16,7 @@ any agent.
 """
 
 #g = OthelloGame(6)
-g = TicTacToeGame(4)
+g = TicTacToeGame(3)
 
 # all players
 rp = RandomPlayer(g).play

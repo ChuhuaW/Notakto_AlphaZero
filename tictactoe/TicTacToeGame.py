@@ -120,7 +120,7 @@ def display(board):
         '\t 1  {3} | {4} | {5}\n'
         '\t   ---+---+---\n'
         '\t 2  {6} | {7} | {8}\n\n'.format(
-            *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
+            *[TicTacToeGame.INT2STR_MAP[x] for x in board.pieces.ravel()]))
 
     # print(
     #     '\n'
@@ -134,7 +134,7 @@ def display(board):
     #     '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
     #         *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
 
-    n = board.shape[0]
+    n = board.pieces.shape[0]
 
     # print("   ", end="")
     # for y in range(n):

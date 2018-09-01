@@ -100,7 +100,7 @@ class Coach():
                 leaf_start_point = self.args.numIters+self.boards_array.index(s)+1
                 leaf_end_point = self.args.numIters+self.boards_array.index(s)+self.args.random_iterations+1
                 for r in range(leaf_start_point,leaf_end_point):
-                    print('------ITER FOR LEAF SAMPLING' + str(r) + '------')
+                    print('------ITER FOR LEAF SAMPLING ' + str(r) + '------')
                     self.train(r,s)
 
 

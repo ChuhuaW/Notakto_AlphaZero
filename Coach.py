@@ -96,7 +96,7 @@ class Coach():
 
         if self.args.leaf_based_sampling:
             for s in self.boards_array:
-                display(s.pieces)
+                display(s)
                 leaf_start_point = self.args.numIters+self.boards_array.index(s)+1
                 leaf_end_point = self.args.numIters+self.boards_array.index(s)+self.args.random_iterations+1
                 for r in range(leaf_start_point,leaf_end_point):

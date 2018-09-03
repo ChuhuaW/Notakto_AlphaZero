@@ -18,7 +18,7 @@ import java.nio.file.FileSystems;
 
 public class Test {
     public static void main(String[] args){
-        int n = 3;
+        int n = 4;
 
         TicTacToe game = new TicTacToe(n);
         //b = game.copy(a);

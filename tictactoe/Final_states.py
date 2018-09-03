@@ -1,37 +1,53 @@
 import numpy as np
 import re
+from itertools import combinations
+from TicTacToeLogic import Board
+
+N = Board.SIZE
+
+
+def Calculate_states(n):
+	all_states = set()
+	#rotation_flip = set()
+	for i in range(n,2*n):
+		comb = combinations(range(n**2),i)
+		for c in comb:
+			#print c
+			b = Board(N,1)
+			for ci in c:
+				b.pieces.ravel()[ci] = 0
+			#print b
+			if not b.is_win(1) and len(b.get_legal_moves(False)) == 0:
+				#print b
+				#print b
+				rotation_flip = set()
+
+				for r in range(1,5):
+					for f in [True, False]:
+						rot = np.rot90(b.pieces,r)
+						if f:
+							rot = np.fliplr(rot)
+
+						rotation_flip.add(str(rot))
+				#print 'rotation_flip:',rotation_flip
+				#print('rotation_flip & all_states', rotation_flip & all_states)
+				if (rotation_flip & all_states) == set([]):
+					all_states.add(str(b.pieces))
+
+				# if str(b.pieces) not in rotation_flip:
+				# 	print b 
+				# 	all_states.add(b)
+	#print 'all_states:',all_states
+   	return all_states
+
+def initial_board(n):
+    return np.ones([n,n])
+
+#def validate_states:
 
 
 
-def Calculate_states():
-    return
 
-def Create_board(n):
-    return np.ones(n,n)
-
-def Read_states_from_file(filename):
-    f=open(filename, "r")
-    states = f.read().strip('\n').split('\n\n')
-    states_array = []
-    for s in states:
-        s = re.sub('\n','',s)
-        states_array.append(np.array(list(s), dtype=int).reshape(3,3))
-    return states_array
-
-def Randomly_remove(state, depth = 2):
-    '''
-    remove pieces from board in random based on depth
-    '''
-
-    # return array of index of all pieces on the board and
-    state_copy = np.copy(state)
-    indice = np.where(state_copy == 1)
-    # choose (depth) index at random
-    remove_indice = np.random.choice(indice[0].shape[0],depth,replace=False)
-    for i in remove_indice:
-        x,y = indice[0][i], indice[1][i]
-        state_copy[x][y]=0
-    return state_copy
 
 
 
@@ -40,10 +56,32 @@ def Randomly_remove(state, depth = 2):
 
 
 def main():
-    state = Read_states_from_file("states.txt")
-    print state[0]
-    #print np.where(state[0] == 1)
-    print Randomly_remove(state[0])
+	
+	b = Board(N,1)
+	# all_states.add(b)
+	# print all_states
+	# b =Board(3,1)
+	b.pieces = np.array([[1, 1, 0],[1, 0, 1],[0, 1, 1]])
+	# print np.where(b.pieces == 0)
+	all_states =  Calculate_states(Board.SIZE)
+	#print np.rot90(b.pieces,4)
+	#print b
+
+
+	#print [i for i in all_states]
+
+
+
+
+
+
+	#print b.get_legal_moves(True)
+	#all_states = Calculate_states(N)
+	#print [b.pieces for b in all_states]
+	print len(all_states)
+    #print all_states
+
+
   
 if __name__== "__main__":
     main()

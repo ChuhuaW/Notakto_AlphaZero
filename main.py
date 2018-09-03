@@ -12,9 +12,9 @@ from utils import *
 
 
 args = dotdict({
-    'numIters': 1,
+    'numIters': 8,
     'numEps': 100,
-    'tempThreshold': 15,
+    'tempThreshold': 16,
     'updateThreshold': 0.6,
     'maxlenOfQueue': 200000,
     'numMCTSSims': 25,
@@ -24,7 +24,7 @@ args = dotdict({
     'leaf_based_sampling': True,
     'random_iterations': 1,
     'states_file': './tictactoe/states.txt',
-    'numItersForLeafNodeSearch': 10,
+    'remove_depth': 6,
 
     'checkpoint': './temp/',
     'load_model': False,

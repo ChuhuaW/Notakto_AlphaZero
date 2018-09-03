@@ -112,27 +112,28 @@ class TicTacToeGame(Game):
 def display(board):
     #print('this is board', board)
     #print(type(board))
-    print(
-        '\n'
-        '\t    0   1   2\n'
-        '\t 0  {0} | {1} | {2}\n'
-        '\t   ---+---+---\n'
-        '\t 1  {3} | {4} | {5}\n'
-        '\t   ---+---+---\n'
-        '\t 2  {6} | {7} | {8}\n\n'.format(
-            *[TicTacToeGame.INT2STR_MAP[x] for x in board.pieces.ravel()]))
-
-    # print(
-    #     '\n'
-    #     '\t    0   1   2   3\n'
-    #     '\t 0  {0} | {1} | {2} | {3}\n'
-    #     '\t   ---+---+---+---\n'
-    #     '\t 1  {4} | {5} | {6} | {7}\n'
-    #     '\t   ---+---+---+---\n'
-    #     '\t 2  {8} | {9} | {10} | {11}\n'
-    #     '\t   ---+---+---+---\n'
-    #     '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
-    #         *[TicTacToeGame.INT2STR_MAP[x] for x in board.ravel()]))
+    if Board.SIZE == 3:
+        print(
+            '\n'
+            '\t    0   1   2\n'
+            '\t 0  {0} | {1} | {2}\n'
+            '\t   ---+---+---\n'
+            '\t 1  {3} | {4} | {5}\n'
+            '\t   ---+---+---\n'
+            '\t 2  {6} | {7} | {8}\n\n'.format(
+                *[TicTacToeGame.INT2STR_MAP[x] for x in board.pieces.ravel()]))
+    elif Board.SIZE ==4:
+        print(
+            '\n'
+            '\t    0   1   2   3\n'
+            '\t 0  {0} | {1} | {2} | {3}\n'
+            '\t   ---+---+---+---\n'
+            '\t 1  {4} | {5} | {6} | {7}\n'
+            '\t   ---+---+---+---\n'
+            '\t 2  {8} | {9} | {10} | {11}\n'
+            '\t   ---+---+---+---\n'
+            '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
+                *[TicTacToeGame.INT2STR_MAP[x] for x in board.pieces.ravel()]))
 
     n = board.pieces.shape[0]
 

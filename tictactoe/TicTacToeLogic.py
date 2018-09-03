@@ -24,19 +24,20 @@ class Board():
     # list of all 8 directions on the board, as (x,y) offsets
     __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
     SIZE = 3
-    def __init__(self, n=SIZE):
+    def __init__(self, n=SIZE, initial = 0):
         "Set up initial board configuration."
 
         self.n = n
         # Create the empty board array.
         self.pieces = [None]*self.n
         for i in range(self.n):
-            self.pieces[i] = [0]*self.n
+            self.pieces[i] = [initial]*self.n
         self.pieces = np.array(self.pieces)
         self.mask_pieces=[]
 
 
-
+    def __str__(self):
+        return str(self.pieces)
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index): 
@@ -48,7 +49,7 @@ class Board():
         self.mask_pieces = [(ind[0][i],ind[1][i]) for i in range(ind[0].shape[0])]
 
 
-    def get_legal_moves(self):
+    def get_legal_moves(self,final=True):
         """Returns all the legal moves for the given color.
         (1 for white, -1 for black)
         @param color not used and came from previous version.        
@@ -75,7 +76,7 @@ class Board():
 
             all_possible_states.append(self)
  
-        all_possible_states = self.validatePossibleMoves(all_possible_states)
+        all_possible_states = self.validatePossibleMoves(all_possible_states,final)
         # print('all_possible_states',all_possible_states)
         # print(states_to_moves[str(all_possible_states[0])])
         # print('length of states',len(all_possible_states))
@@ -87,14 +88,20 @@ class Board():
 
         return [states_to_moves[str(s)] for s in all_possible_states]
 
-    def validatePossibleMoves(self,all_possible_states):
+    def validatePossibleMoves(self,all_possible_states,final):
         winners = []
         for state in all_possible_states:
             winners.append(state.is_win(1))
-        if all(win == True for win in winners):
-            return all_possible_states
+        if final:
+            if all(win == True for win in winners):
+                return all_possible_states
+            else:
+                return [all_possible_states[w] for w in range(len(winners)) if winners[w] == 0]
         else:
-            return [all_possible_states[w] for w in range(len(winners)) if winners[w] == 0]
+            if all(win == True for win in winners):
+                return []
+            else:
+                return [all_possible_states[w] for w in range(len(winners)) if winners[w] == 0]      
 
     def Randomly_remove(self, depth = 2):
         '''
@@ -180,7 +187,7 @@ def Read_states_from_file(filename):
     for s in states:
         s = re.sub('\n','',s)
         b = Board()
-        b.pieces = np.array(list(s), dtype=int).reshape(3,3)
+        b.pieces = np.array(list(s), dtype=int).reshape(Board.SIZE,Board.SIZE)
         b.get_mask_pieces()
         boards_array.append(b)
     return boards_array

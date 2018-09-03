@@ -51,7 +51,7 @@ class Coach():
             #print 'aboard', aboard.pieces
             board = deepcopy(aboard)
             #print 'board',board.pieces
-            board = board.Randomly_remove()
+            board = board.Randomly_remove(self.args.remove_depth)
 
             #print board
 
@@ -93,7 +93,7 @@ class Coach():
 
         for i in range(1, self.args.numIters+1):
             self.train(i)
-
+        print "--------STARTING LEAF BASED SEARCH--------"
         if self.args.leaf_based_sampling:
             for s in self.boards_array:
                 display(s)

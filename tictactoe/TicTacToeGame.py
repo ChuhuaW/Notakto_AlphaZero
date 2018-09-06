@@ -46,7 +46,7 @@ class TicTacToeGame(Game):
             return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board.pieces)
-        #b.mask_pieces = board.mask_pieces
+        b.mask_pieces = board.mask_pieces
         move = (int(action/self.n), action%self.n)
         b.execute_move(move, 1)
         return (b, -player)

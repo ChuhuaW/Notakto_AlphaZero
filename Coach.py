@@ -47,68 +47,35 @@ class Coach():
 
         if aboard is None:
             board = self.game.getInitBoard()
-            
-            self.curPlayer = 1
-            episodeStep = 0
-
-            while True:
-                #print(type(board))
-                episodeStep += 1
-                canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
-                temp = int(episodeStep < self.args.tempThreshold)
-                #print temp
-
-                pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
-                sym = self.game.getSymmetries(canonicalBoard.pieces, pi)
-                for b,p in sym:
-                    trainExamples.append([b, self.curPlayer, p, None])
-
-                action = np.random.choice(len(pi), p=pi)
-                # print 'pi', pi
-                # print 'action',action
-                board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
-
-                r = self.game.getGameEnded(board, self.curPlayer)
-                if r!=0:
-                    #print 'Endgame', board
-                    return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
         else:
             #print 'aboard', aboard.pieces
             board = deepcopy(aboard)
-            #print 'board',board.pieces
-            #board = board.Randomly_remove()
+            #board.All_remove()
+            
+        self.curPlayer = 1
+        episodeStep = 0
 
-            #print board
+        while True:
+            #print(type(board))
+            episodeStep += 1
+            canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
+            temp = int(episodeStep < self.args.tempThreshold)
+            #print temp
 
-            self.curPlayer = 1
-            episodeStep = 0
+            pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
+            sym = self.game.getSymmetries(canonicalBoard.pieces, pi)
+            for b,p in sym:
+                trainExamples.append([b, self.curPlayer, p, None])
 
-            while True:
-                for _ in range(100):
-                #print(type(board))
-                    episodeStep += 1
-                    #print episodeStep
-                    canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
-                    #temp = int(episodeStep < self.args.tempThreshold)
-                    #print temp
+            action = np.random.choice(len(pi), p=pi)
+            # print 'pi', pi
+            # print 'action',action
+            board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
 
-                    pi = self.mcts.getActionProb(canonicalBoard, temp=0)
-                    sym = self.game.getSymmetries(canonicalBoard.pieces, pi)
-                    for b,p in sym:
-                        trainExamples.append([b, self.curPlayer, p, None])
-
-                    action = np.random.choice(len(pi), p=pi)
-                    # print 'pi', pi
-                    # print 'action',action
-                    board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
-
-                    r = self.game.getGameEnded(board, self.curPlayer)
-                    board = deepcopy(aboard)
-                if r!=0:
-                    #print 'Endgame', board
-                    return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
-
-
+            r = self.game.getGameEnded(board, self.curPlayer)
+            if r!=0:
+                #print 'Endgame', board
+                return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
 
     def learn(self):
         """
@@ -127,15 +94,15 @@ class Coach():
         if self.args.leaf_based_sampling:
             for s in self.boards_array:
                 display(s)
-                #leaf_start_point = self.args.numIters+self.boards_array.index(s)+1
+                #leaf_start_point = self.args.numIters+1
                 #leaf_end_point = self.args.numIters+self.boards_array.index(s)+self.args.random_iterations+1
                 #for r in range(leaf_start_point,leaf_end_point):
                 #print('------ITER FOR LEAF SAMPLING ' + str(r) + '------')
-                leaf_start_point = self.args.numIters+self.boards_array.index(s)
+                leaf_start_point = self.args.numIters+self.boards_array.index(s)+1
                 #leaf_end_point = self.args.numIters+self.boards_array.index(s)+2
                 print('------ITER FOR LEAF SAMPLING ' + str(leaf_start_point) + '------')
-                for l in range(leaf_start_point,leaf_start_point+1):
-                    self.train(l,s)
+                #for l in range(leaf_start_point,leaf_end_point+1):
+                self.train(leaf_start_point,s)
         # for i in range(leaf_end_point, leaf_end_point+self.args.numIters+1):
         #     self.train(i)
 
@@ -146,10 +113,7 @@ class Coach():
         # bookkeeping
        
         # examples of the iteration
-        if board is None:
-            numeps = self.args.numEps
-        else:
-            numeps = 1
+        numeps = self.args.numEps
 
 
         if not self.skipFirstSelfPlay or iteration>1:

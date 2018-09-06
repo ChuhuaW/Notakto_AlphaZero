@@ -122,6 +122,17 @@ class Board():
             self[x][y]=0
         return self
 
+    def All_remove(self):
+        '''
+        remove pieces from board in random based on depth
+        '''
+
+        #print 'board:',self
+        # return array of index of all pieces on the board and
+        #state_copy = np.copy(self.pieces)
+        self.pieces = np.zeros(Board.SIZE,Board.SIZE)
+        return self
+
     def has_legal_moves(self):
         for y in range(self.n):
             for x in range(self.n):
@@ -207,8 +218,11 @@ def Read_states_from_file_py(filename):
         boards_array.append(b)
     return boards_array
 
-# b = Board()
-# b.pieces=np.array([[1,0,1],[1,1,1],[1,1,0]])
+#b = Board()
+#b.pieces=np.array([[1,0,1],[1,1,1],[1,1,0]])
+
+#b.pieces = np.zeros(Board.SIZE,Board.SIZE)
+
 # print b.pieces.sum()
 # b.Randomly_remove()
 # print 'before',b.mask_pieces

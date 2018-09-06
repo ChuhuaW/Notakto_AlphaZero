@@ -13,11 +13,11 @@ from utils import *
 
 
 args = dotdict({
-    'numIters': 50,
+    'numIters': 70,
     'numEps': 100,
     'tempThreshold': 15,
     'updateThreshold': 0.6,
-    'maxlenOfQueue': 200000,
+    'maxlenOfQueue': 20000,
     'numMCTSSims': 25,
     'arenaCompare': 40,
     'cpuct': 1,
@@ -30,7 +30,7 @@ args = dotdict({
     'checkpoint': './temp/4x4/',
     'load_model': False,
     'load_folder_file': ('/nfs/zapdos/home/data/vision3/cw234/tictactoe/alpha-zero-general/temp/','best_4x4.pth.tar'),
-    'numItersForTrainExamplesHistory': 50,
+    'numItersForTrainExamplesHistory': 20,
 
 })
 

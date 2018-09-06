@@ -130,7 +130,7 @@ class Board():
         #print 'board:',self
         # return array of index of all pieces on the board and
         #state_copy = np.copy(self.pieces)
-        self.pieces = np.zeros(Board.SIZE,Board.SIZE)
+        self.pieces = np.zeros((Board.SIZE,Board.SIZE))
         return self
 
     def has_legal_moves(self):

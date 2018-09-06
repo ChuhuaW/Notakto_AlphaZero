@@ -50,7 +50,7 @@ class Coach():
         else:
             #print 'aboard', aboard.pieces
             board = deepcopy(aboard)
-            #board.All_remove()
+            board.All_remove()
             
         self.curPlayer = 1
         episodeStep = 0
@@ -86,9 +86,9 @@ class Coach():
         only if it wins >= updateThreshold fraction of games.
         """
 
-        for i in range(1, self.args.numIters+1):
-            print('------ITER ' + str(i) + '------')
-            self.train(i)
+        # for i in range(1, self.args.numIters+1):
+        #     print('------ITER ' + str(i) + '------')
+        #     self.train(i)
 
         print "--------STARTING LEAF BASED SEARCH--------"
         if self.args.leaf_based_sampling:

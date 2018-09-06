@@ -13,7 +13,7 @@ from utils import *
 
 
 args = dotdict({
-    'numIters': 70,
+    'numIters': 0,
     'numEps': 100,
     'tempThreshold': 15,
     'updateThreshold': 0.6,

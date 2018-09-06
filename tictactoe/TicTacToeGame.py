@@ -46,7 +46,7 @@ class TicTacToeGame(Game):
             return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board.pieces)
-        b.mask_pieces = board.mask_pieces
+        #b.mask_pieces = board.mask_pieces
         move = (int(action/self.n), action%self.n)
         b.execute_move(move, 1)
         return (b, -player)
@@ -134,8 +134,22 @@ def display(board):
             '\t   ---+---+---+---\n'
             '\t 3  {12} | {13} | {14} | {15}\n\n'.format(
                 *[TicTacToeGame.INT2STR_MAP[x] for x in board.pieces.ravel()]))
+    elif Board.SIZE ==5:
+        print(
+            '\n'
+            '\t    0   1   2   3   4\n'
+            '\t 0  {0} | {1} | {2} | {3} | {4}\n'
+            '\t   ---+---+---+---+---\n'
+            '\t 1  {5} | {6} | {7} | {8} | {9}\n'
+            '\t   ---+---+---+---+---\n'
+            '\t 2  {10} | {11} | {12} | {13} | {14}\n'
+            '\t   ---+---+---+---+---\n'
+            '\t 3  {15} | {16} | {17} | {18} | {19}\n'
+            '\t   ---+---+---+---+---\n'
+            '\t 3  {20} | {21} | {22} | {23} | {24}\n\n'.format(
+                *[TicTacToeGame.INT2STR_MAP[x] for x in board.pieces.ravel()]))
 
-    n = board.pieces.shape[0]
+    n = board.pieces.shape[0]    
 
     # print("   ", end="")
     # for y in range(n):

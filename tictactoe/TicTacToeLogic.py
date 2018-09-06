@@ -23,7 +23,7 @@ class Board():
 
     # list of all 8 directions on the board, as (x,y) offsets
     __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
-    SIZE = 3
+    SIZE = 4
     def __init__(self, n=SIZE, initial = 0):
         "Set up initial board configuration."
 
@@ -49,7 +49,7 @@ class Board():
         self.mask_pieces = [(ind[0][i],ind[1][i]) for i in range(ind[0].shape[0])]
 
 
-    def get_legal_moves(self,final=True):
+    def get_legal_moves(self,final=True,valid = True):
         """Returns all the legal moves for the given color.
         (1 for white, -1 for black)
         @param color not used and came from previous version.        
@@ -75,8 +75,8 @@ class Board():
             states_to_moves[str(self)]=m
 
             all_possible_states.append(self)
- 
-        all_possible_states = self.validatePossibleMoves(all_possible_states,final)
+        if valid == True:
+            all_possible_states = self.validatePossibleMoves(all_possible_states,final)
         # print('all_possible_states',all_possible_states)
         # print(states_to_moves[str(all_possible_states[0])])
         # print('length of states',len(all_possible_states))
@@ -112,6 +112,7 @@ class Board():
         # return array of index of all pieces on the board and
         #state_copy = np.copy(self.pieces)
         indice = np.where(self.pieces == 1)
+        depth = int(self.pieces.sum()/2)
         #print 'indice', indice
         # choose (depth) index at random
         removed_indice = np.random.choice(indice[0].shape[0],depth,replace=False)
@@ -192,7 +193,24 @@ def Read_states_from_file(filename):
         boards_array.append(b)
     return boards_array
 
-#b = Board()
+def Read_states_from_file_py(filename):
+    '''read states from files and convert them into Board()'''
+    f=open(filename, "r")
+    states = f.read().strip('\n').split('\n')
+    #f.write(str(np.fromstring(i.strip('[]'),dtype=int, sep=' '))+'\n')
+    #print states
+    boards_array = []
+    for s in states:
+        b = Board()
+        b.pieces = np.fromstring(s,dtype=int, sep=' ').reshape(Board.SIZE,Board.SIZE)
+        #b.get_mask_pieces()
+        boards_array.append(b)
+    return boards_array
+
+# b = Board()
+# b.pieces=np.array([[1,0,1],[1,1,1],[1,1,0]])
+# print b.pieces.sum()
+# b.Randomly_remove()
 # print 'before',b.mask_pieces
 # # print b.pieces[3]
 # #print b.get_mask_pieces()

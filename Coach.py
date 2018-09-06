@@ -24,7 +24,7 @@ class Coach():
         self.mcts = MCTS(self.game, self.nnet, self.args)
         self.trainExamplesHistory = []    # history of examples from args.numItersForTrainExamplesHistory latest iterations
         self.skipFirstSelfPlay = False # can be overriden in loadTrainExamples()
-        self.boards_array = logic.Read_states_from_file(self.args.states_file)
+        self.boards_array = logic.Read_states_from_file_py(self.args.states_file)
 
 
     def executeEpisode(self,aboard=None):
@@ -47,38 +47,66 @@ class Coach():
 
         if aboard is None:
             board = self.game.getInitBoard()
+            
+            self.curPlayer = 1
+            episodeStep = 0
+
+            while True:
+                #print(type(board))
+                episodeStep += 1
+                canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
+                temp = int(episodeStep < self.args.tempThreshold)
+                #print temp
+
+                pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
+                sym = self.game.getSymmetries(canonicalBoard.pieces, pi)
+                for b,p in sym:
+                    trainExamples.append([b, self.curPlayer, p, None])
+
+                action = np.random.choice(len(pi), p=pi)
+                # print 'pi', pi
+                # print 'action',action
+                board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
+
+                r = self.game.getGameEnded(board, self.curPlayer)
+                if r!=0:
+                    #print 'Endgame', board
+                    return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
         else:
             #print 'aboard', aboard.pieces
             board = deepcopy(aboard)
             #print 'board',board.pieces
-            board = board.Randomly_remove(self.args.remove_depth)
+            #board = board.Randomly_remove()
 
             #print board
 
-        self.curPlayer = 1
-        episodeStep = 0
+            self.curPlayer = 1
+            episodeStep = 0
 
-        while True:
-            #print(type(board))
-            episodeStep += 1
-            canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
-            temp = int(episodeStep < self.args.tempThreshold)
-            #print temp
+            while True:
+                for _ in range(100):
+                #print(type(board))
+                    episodeStep += 1
+                    #print episodeStep
+                    canonicalBoard = self.game.getCanonicalForm(board,self.curPlayer)
+                    #temp = int(episodeStep < self.args.tempThreshold)
+                    #print temp
 
-            pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
-            sym = self.game.getSymmetries(canonicalBoard.pieces, pi)
-            for b,p in sym:
-                trainExamples.append([b, self.curPlayer, p, None])
+                    pi = self.mcts.getActionProb(canonicalBoard, temp=0)
+                    sym = self.game.getSymmetries(canonicalBoard.pieces, pi)
+                    for b,p in sym:
+                        trainExamples.append([b, self.curPlayer, p, None])
 
-            action = np.random.choice(len(pi), p=pi)
-            # print 'pi', pi
-            # print 'action',action
-            board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
+                    action = np.random.choice(len(pi), p=pi)
+                    # print 'pi', pi
+                    # print 'action',action
+                    board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
 
-            r = self.game.getGameEnded(board, self.curPlayer)
-            if r!=0:
-                #print 'Endgame', board
-                return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
+                    r = self.game.getGameEnded(board, self.curPlayer)
+                    board = deepcopy(aboard)
+                if r!=0:
+                    #print 'Endgame', board
+                    return [(x[0],x[2],r*((-1)**(x[1]!=self.curPlayer))) for x in trainExamples]
 
 
 
@@ -92,39 +120,57 @@ class Coach():
         """
 
         for i in range(1, self.args.numIters+1):
+            print('------ITER ' + str(i) + '------')
             self.train(i)
+
         print "--------STARTING LEAF BASED SEARCH--------"
         if self.args.leaf_based_sampling:
             for s in self.boards_array:
                 display(s)
-                leaf_start_point = self.args.numIters+self.boards_array.index(s)+1
-                leaf_end_point = self.args.numIters+self.boards_array.index(s)+self.args.random_iterations+1
-                for r in range(leaf_start_point,leaf_end_point):
-                    print('------ITER FOR LEAF SAMPLING ' + str(r) + '------')
-                    self.train(r,s)
+                #leaf_start_point = self.args.numIters+self.boards_array.index(s)+1
+                #leaf_end_point = self.args.numIters+self.boards_array.index(s)+self.args.random_iterations+1
+                #for r in range(leaf_start_point,leaf_end_point):
+                #print('------ITER FOR LEAF SAMPLING ' + str(r) + '------')
+                leaf_start_point = self.args.numIters+self.boards_array.index(s)
+                #leaf_end_point = self.args.numIters+self.boards_array.index(s)+2
+                print('------ITER FOR LEAF SAMPLING ' + str(leaf_start_point) + '------')
+                for l in range(leaf_start_point,leaf_start_point+1):
+                    self.train(l,s)
+        # for i in range(leaf_end_point, leaf_end_point+self.args.numIters+1):
+        #     self.train(i)
 
 
-    def train(self,iteration=None,board=None):
+
+    def train(self,iteration=None,board=None,numeps = None):
 
         # bookkeeping
-        print('------ITER ' + str(iteration) + '------')
+       
         # examples of the iteration
+        if board is None:
+            numeps = self.args.numEps
+        else:
+            numeps = 1
+
+
         if not self.skipFirstSelfPlay or iteration>1:
             iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 
             eps_time = AverageMeter()
-            bar = Bar('Self Play', max=self.args.numEps)
+            bar = Bar('Self Play', max=numeps)
             end = time.time()
             #for clif_state in self.board
-            for eps in range(self.args.numEps):
+            for eps in range(numeps):
                 self.mcts = MCTS(self.game, self.nnet, self.args)   # reset search tree
-                iterationTrainExamples += self.executeEpisode(board)
+                if board is None:
+                    iterationTrainExamples += self.executeEpisode()
+                else:
+                    iterationTrainExamples += self.executeEpisode(board)
                 #print iterationTrainExamples[0]
 
                 # bookkeeping + plot progress
                 eps_time.update(time.time() - end)
                 end = time.time()
-                bar.suffix  = '({eps}/{maxeps}) Eps Time: {et:.3f}s | Total: {total:} | ETA: {eta:}'.format(eps=eps+1, maxeps=self.args.numEps, et=eps_time.avg,
+                bar.suffix  = '({eps}/{maxeps}) Eps Time: {et:.3f}s | Total: {total:} | ETA: {eta:}'.format(eps=eps+1, maxeps=numeps, et=eps_time.avg,
                                                                                                            total=bar.elapsed_td, eta=bar.eta_td)
                 bar.next()
             bar.finish()
@@ -182,7 +228,7 @@ class Coach():
 
     def loadTrainExamples(self):
         modelFile = os.path.join(self.args.load_folder_file[0], self.args.load_folder_file[1])
-        examplesFile = modelFile+".examples"
+        examplesFile = modelFile#+".examples"
         if not os.path.isfile(examplesFile):
             print(examplesFile)
             r = input("File with trainExamples not found. Continue? [y|n]")
@@ -194,4 +240,4 @@ class Coach():
                 self.trainExamplesHistory = Unpickler(f).load()
             f.closed
             # examples based on the model were already collected (loaded)
-            self.skipFirstSelfPlay = True 
+            self.skipFirstSelfPlay = True

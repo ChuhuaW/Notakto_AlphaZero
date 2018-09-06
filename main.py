@@ -11,10 +11,11 @@ from utils import *
 
 
 
+
 args = dotdict({
-    'numIters': 8,
+    'numIters': 50,
     'numEps': 100,
-    'tempThreshold': 16,
+    'tempThreshold': 15,
     'updateThreshold': 0.6,
     'maxlenOfQueue': 200000,
     'numMCTSSims': 25,
@@ -23,18 +24,19 @@ args = dotdict({
 
     'leaf_based_sampling': True,
     'random_iterations': 1,
-    'states_file': './tictactoe/states.txt',
-    'remove_depth': 6,
+    'states_file': './tictactoe/states_4x4.txt',
+    'remove_depth': 10,
 
-    'checkpoint': './temp/',
+    'checkpoint': './temp/4x4/',
     'load_model': False,
-    'load_folder_file': ('/dev/models/','best3x3.pth.tar'),
-    'numItersForTrainExamplesHistory': 20,
+    'load_folder_file': ('/nfs/zapdos/home/data/vision3/cw234/tictactoe/alpha-zero-general/temp/','best_4x4.pth.tar'),
+    'numItersForTrainExamplesHistory': 50,
 
 })
 
 if __name__=="__main__":
     #g = Game(6)
+
     g = TicTacToeGame(Board.SIZE)
     nnet = nn(g)
 
@@ -42,6 +44,7 @@ if __name__=="__main__":
         nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
 
     c = Coach(g, nnet, args)
+
     if args.load_model:
         print("Load trainExamples from file")
         c.loadTrainExamples()
